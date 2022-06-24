@@ -9,8 +9,8 @@
     "mongoose": "^6.3.6"
   },
   "scripts": {
-    "start": "node ENVIROMENT=PROD server/server.js",
-    "dev": "nodemon ENVIROMENT=DEV server/server.js",
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
     "test": "jest server/tests"
   },
   "devDependencies": {

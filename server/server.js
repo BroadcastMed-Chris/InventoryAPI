@@ -8,9 +8,11 @@ const mongoose = require('mongoose');
 
 let mongooseURI = ""
 
+console.log(process.env)
+
 // if environment is production, use the production database
 if (process.env.NODE_ENV === 'PROD') {
-    mongooseURI = process.env.MONGODB_URI;
+    mongooseURI = process.env.MONGO_URI;
 // if environment is not production, use the local database
 } else {
     mongooseURI = 'mongodb://docker:mongopw@localhost:49153';
