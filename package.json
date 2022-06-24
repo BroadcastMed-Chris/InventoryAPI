@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.6"
+  },
+  "scripts": {
+    "start": "node ENVIROMENT=PROD server/server.js",
+    "dev": "nodemon ENVIROMENT=DEV server/server.js",
+    "test": "jest server/tests"
+  },
+  "devDependencies": {
+    "jest": "^28.1.1",
+    "nodemon": "^2.0.16",
+    "supertest": "^6.2.3"
+  }
+}
