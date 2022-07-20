@@ -23,7 +23,8 @@ mongoose.model('User', {
     },
     token:{
         type: String,
-        required: false
+        required: false,
+        default: null
     }
 });
 

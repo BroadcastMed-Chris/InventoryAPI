@@ -3,9 +3,10 @@ const express = require('express');
 const router = express.Router();
 const Encoder = require('../models/encoder');
 const logDatabaseOperation = require('../lib/logOperations');
+const {requireLogin, requireAdmin} = require('../lib/routeProtection')
 
 // should return all encoders from the database
-router.get('/', (req, res) => {
+router.get('/', requireLogin, (req, res) => {
     Encoder.find({}, (err, encoders) => {
         if (err) {
             res.send(err);
@@ -16,7 +17,7 @@ router.get('/', (req, res) => {
 });
 
 // should return a single encoder from the database
-router.get('/:id', (req, res) => {
+router.get('/:id', requireLogin, (req, res) => {
     Encoder.findById(req.params.id, (err, encoder) => {
         if (err) {
             res.send(err);
@@ -27,7 +28,7 @@ router.get('/:id', (req, res) => {
 });
 
 // should create a new encoder in the database
-router.post('/', (req, res) => {
+router.post('/', requireAdmin, (req, res) => {
     Encoder.create(req.body, (err, encoder) => {
         if (err) {
             res.send(err);
@@ -39,7 +40,7 @@ router.post('/', (req, res) => {
 });
 
 // should update an existing encoder in the database
-router.put('/:id', (req, res) => {
+router.put('/:id', requireAdmin, (req, res) => {
     Encoder.findByIdAndUpdate(req.params.id, req.body, (err, encoder) => {
         if (err) {
             res.send(err);
@@ -51,7 +52,7 @@ router.put('/:id', (req, res) => {
 })
 
 // Should be able to delete an encoder from the database
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
     Encoder.findByIdAndRemove(req.params.id, (err, encoder) => {
         if (err) {
             res.send(err);
@@ -64,7 +65,7 @@ router.delete('/:id', (req, res) => {
 
 
 // QR code route for toggling the status of an encoder between in and out
-router.put('/:id/toggle', (req, res) => {
+router.put('/:id/toggle', requireLogin, (req, res) => {
     Encoder.findById(req.params.id, (err, encoder) => {
         if (err) {
             res.send(err);

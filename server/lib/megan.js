@@ -24,6 +24,9 @@ function colorifier(req, str) {
 
 
 module.exports = function logger (req, res ,next) {
-    console.log(colorifier(req, `**Traffic: ${req.method.toUpperCase()} ${req.originalUrl}` ));
+    console.log(colorifier(req, `**Traffic: ${req.method.toUpperCase()} ${req.originalUrl} \n` ));
+    if(req.session) {
+        console.log((`**Session: ${req.session}`).yellow)
+    }
     next();
 }

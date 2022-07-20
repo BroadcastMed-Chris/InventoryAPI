@@ -1,0 +1,5 @@
+NODE_ENV= "DEV" || "PROD"
+PORT= 0000
+MONGO_URI=mongodb://localhost:27017
+MONGO_DEV_URI= mongodb://localhost:49155
+SESSION_SECRET= "super secret session password"
