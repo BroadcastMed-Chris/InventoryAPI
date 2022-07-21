@@ -25,7 +25,9 @@ const port = process.env.PORT || 3000;
 mongoose.connect(mongooseURI);
 // log a success message on connection
 mongoose.connection.on('connected', () => {
-    console.log('Database is connected'.rainbow);
+    if(process.env.NODE_ENV === 'PROD'){
+        console.log('Database is connected'.rainbow);
+    }
 });
 // throw an error if there is a problem connecting to the database
 mongoose.connection.on('error', (err) => {
@@ -66,3 +68,6 @@ app.use('/users', userRouter);
 app.listen(port, () => {
     console.log(`Inventory API listening on port ${port}`);
 });
+
+
+module.exports = app;

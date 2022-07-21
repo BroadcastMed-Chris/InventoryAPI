@@ -50,7 +50,7 @@ router.post('/', requireAdmin, (req, res) => {
             });
         } else {
             logDatabaseOperation("Create New User", "User", user)
-            res.json({message: 'userCreated'});
+            res.status(201).json({message: 'User Created', user});
         }
     })
     } catch(err) {
@@ -116,7 +116,7 @@ router.post('/login', (req, res) => {
         try{
         if (err) {
             logDatabaseOperation(`Error: ${err.message}`, "User", user)
-            res.status(403).json({ message: 'User not found', errMsg: err.message, err });
+            res.status(401).json({ message: 'User not found', errMsg: err.message, err });
         } else {
             if (checkPassword(password, user.password)) {
                 if(!user.token){
@@ -127,7 +127,7 @@ router.post('/login', (req, res) => {
                     await user.save((err, user) => {
                         if (err) {
                             logDatabaseOperation("Generate User Token", "User", user)
-                            res.json({ message: 'Error saving token', errMsg: err.message, err });
+                            res.status(500).json({ message: 'Error saving token', errMsg: err.message, err });
                         } else {
                             // set session cookie and user properties for the client
                             res.cookie('token', token)
@@ -141,7 +141,7 @@ router.post('/login', (req, res) => {
                 }     
             } else {
                 // user failed login
-                res.json({ message: 'Incorrect password' });
+                res.status(401).json({ message: 'Incorrect password' });
             }
         }
         } catch(err) {

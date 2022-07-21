@@ -20,8 +20,8 @@ async function requireLogin (req, res, next) {
 
 async function requireAdmin (req, res, next) {
     if(req.cookies['token']){
-        const user = User.findOne({'token': req.cookies.token})
-        if(user !== null && user.token === req.cookies.token || user.admin){
+        const user = await User.findOne({'token': req.cookies.token})
+        if(user !== null && user.token === req.cookies.token && user.admin){
             next()
         } else {
             res.status(401).json({message: "You do not have privledges, contact Administrator."})
