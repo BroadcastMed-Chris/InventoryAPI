@@ -25,6 +25,7 @@ const port = process.env.PORT || 3000;
 mongoose.connect(mongooseURI);
 // log a success message on connection
 mongoose.connection.on('connected', () => {
+    // logging here those errors in test suit
     if(process.env.NODE_ENV === 'PROD'){
         console.log('Database is connected'.rainbow);
     }
@@ -53,11 +54,13 @@ app.use(cookieSession({
 
 app.use( cookieChecker )
 
-// sanity checking route
-app.get('/', (req, res) => {
-    res.json({ message: 'Hello World' });
-});
-
+// hide this route in production
+if(process.env.NODE_ENV === "DEV"){
+    // sanity checking route
+    app.get('/', (req, res) => {
+        res.json({ message: 'Hello World' });
+    });
+}
 // routers
 const encoderRouter = require('./routes/encoders');
 const userRouter = require('./routes/users');

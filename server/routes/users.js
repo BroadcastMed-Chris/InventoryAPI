@@ -114,36 +114,40 @@ router.post('/login', (req, res) => {
     const { email, password } = req.body.user;
     User.findOne({"email": email}, async (err, user) => {
         try{
-        if (err) {
-            logDatabaseOperation(`Error: ${err.message}`, "User", user)
-            res.status(401).json({ message: 'User not found', errMsg: err.message, err });
-        } else {
-            if (checkPassword(password, user.password)) {
-                if(!user.token){
-                    // respond with user info and a token
-                    const token = generateToken(user);
-                    // save the token to the user
-                    user.token = token;
-                    await user.save((err, user) => {
-                        if (err) {
-                            logDatabaseOperation("Generate User Token", "User", user)
-                            res.status(500).json({ message: 'Error saving token', errMsg: err.message, err });
-                        } else {
-                            // set session cookie and user properties for the client
-                            res.cookie('token', token)
-                            // respond with user info and a token
-                            res.json({ message: `Welcome ${user.displayName}`, user });
-                        }   
-                    })
-                } else {
-                    res.cookie('token', user.token);
-                    res.json({message: "You are already logged in", user})
-                }     
-            } else {
-                // user failed login
-                res.status(401).json({ message: 'Incorrect password' });
+            if(user === null){
+                logDatabaseOperation(`Error: Failed user lookup - Could not be found`, "User", req.body.user)
+                res.status(401).json({message: "That user does not exits"});
             }
-        }
+            if (err) {
+                logDatabaseOperation(`Error: ${err.message}`, "User", user)
+                res.status(401).json({ message: 'User not found', errMsg: err.message, err });
+            } else {
+                if (checkPassword(password, user.password)) {
+                    if(!user.token){
+                        // respond with user info and a token
+                        const token = generateToken(user);
+                        // save the token to the user
+                        user.token = token;
+                        await user.save((err, user) => {
+                            if (err) {
+                                logDatabaseOperation("Generate User Token", "User", user)
+                                res.status(500).json({ message: 'Error saving token', errMsg: err.message, err });
+                            } else {
+                                // set session cookie and user properties for the client
+                                res.cookie('token', token)
+                                // respond with user info and a token
+                                res.json({ message: `Welcome ${user.displayName}`, user });
+                            }   
+                        })
+                    } else {
+                        res.cookie('token', user.token);
+                        res.json({message: "You are already logged in", user})
+                    }     
+                } else {
+                    // user failed login
+                    res.status(401).json({ message: 'Incorrect password' });
+                }
+            }
         } catch(err) {
             res.status(501).json({ message: 'Error logging in', errMsg: err.message, err });
         }
