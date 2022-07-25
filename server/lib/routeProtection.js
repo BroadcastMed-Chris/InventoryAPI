@@ -3,12 +3,14 @@ const User = require('../models/user');
 
 
 async function requireLogin (req, res, next) {
-    if(req.cookies['token']){
-        const user = await User.findOne({'token': req.cookies.token})
-        if(user !== null && user.token === req.cookies.token){
+    const {token} = req.headers
+    console.log(token)
+    if(token !== undefined || token !== null){
+        const user = await User.findOne({'token': token})
+        if(user !== null && user.token === token){
             next()
         } else {
-            res.status(401).json({message: "You must be logged in"})
+            res.status(401).json({message: "You must be logged in", err: "token invalid"})
         }
     } else {
         res.status(401).json({message: "You must be logged in"})
@@ -19,12 +21,14 @@ async function requireLogin (req, res, next) {
 // verify the user is logged in and has admin rights to access a route
 
 async function requireAdmin (req, res, next) {
-    if(req.cookies['token']){
-        const user = await User.findOne({'token': req.cookies.token})
-        if(user !== null && user.token === req.cookies.token && user.admin){
+    const {token} = req.headers
+    console.log(token)
+    if(token !== undefined || token !== null){
+        const user = await User.findOne({'token': token})
+        if(user !== null && user.token === token && user.admin){
             next()
         } else {
-            res.status(401).json({message: "You do not have privledges, contact Administrator."})
+            res.status(401).json({message: "You must be logged in", err: "token invalid"})
         }
     } else {
         res.status(401).json({message: "You must be logged in"})

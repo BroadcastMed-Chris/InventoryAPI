@@ -33,7 +33,7 @@ router.get('/:id', requireAdmin, (req, res) => {
 });
 
 // Should create a new user and return the new user
-router.post('/', requireAdmin, (req, res) => {
+router.post('/', (req, res) => {
     try{
     // validation requires name, email, and password
     const user  = new User(req.body.user)
@@ -171,7 +171,7 @@ router.post('/logout', (req, res) => {
                     } else {
                         logDatabaseOperation("Remove User Token", "User", user)
                         // remove the session cookies
-                        res.session = null
+                        // res.session = null;
                         res.json({ message: 'Logged out, goodbye' });
                     }
                 })
